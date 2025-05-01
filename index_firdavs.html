@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Manager</title>
+    <script>
+        const backendUrl = 'http://13.203.200.173:8000';
+
+        function fetchVideos() {
+            fetch(`${backendUrl}/videos`)
+                .then(response => response.json())
+                .then(data => {
+                    const list = document.getElementById("videoList");
+                    list.innerHTML = "";
+                    data.forEach(item => {
+                        const li = document.createElement("li");
+                        li.innerHTML = `<strong>Rank:</strong> ${item[0]}, <strong>Video:</strong> ${item[1]}, <strong>Views:</strong> ${item[2]}, <strong>Likes:</strong> ${item[3]}, <strong>Dislikes:</strong> ${item[4]}, <strong>Category:</strong> ${item[5]}, <strong>Published:</strong> ${item[6]}`;
+                        list.appendChild(li);
+                    });
+                });
+        }
+
+        function addVideo() {
+            const rank = prompt("Rank:");
+            const video = prompt("Video Title:");
+            const views = prompt("Video Views:");
+            const likes = prompt("Likes:");
+            const dislikes = prompt("Dislikes:");
+            const category = prompt("Category:");
+            const published = prompt("Published Year:");
+
+            fetch(`${backendUrl}/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    rank: rank,
+                    video: video,
+                    video_views: views,
+                    likes: likes,
+                    dislikes: dislikes,
+                    category: category,
+                    published: published
+                })
+            }).then(fetchVideos);
+        }
+
+        function deleteVideo() {
+            const rank = prompt("Enter rank of video to delete:");
+            fetch(`${backendUrl}/delete`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rank: rank })
+            }).then(fetchVideos);
+        }
+    </script>
+</head>
+<body onload="fetchVideos()">
+    <h1>Video Manager</h1>
+    <button onclick="addVideo()">Add Video</button>
+    <button onclick="deleteVideo()">Delete Video</button>
+    <ul id="videoList"></ul>
+</body>
+</html>
