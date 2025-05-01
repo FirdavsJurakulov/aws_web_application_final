@@ -8,7 +8,7 @@ A final exam assignment for Operating systems Course
 - RDS: https://ap-south-1.console.aws.amazon.com/rds/home?region=ap-south-1#database:id=db-firdavs;is-cluster=false
 
 ## Script to Import Data to table:
-<code>
+```
   INSERT INTO tbl_firdavs_data (rank, video, video_views, likes, dislikes, category, published) VALUES
     (1, '20 Tennis shots if they were not filmed, NOBODY would believe them', 3471237, 19023, 859, NULL, 2017),
     (2, 'Lil Nas X - Old Town Road (Official Movie) ft. Billy Ray Cyrus', 54071677, 3497955, 78799, 'Music', 2019),
@@ -25,4 +25,4 @@ A final exam assignment for Operating systems Course
     (13, 'Every Moment With You (너와의 모든 지금)', 7958181, 54903, NULL, 'Music', 2024),
     (14, 'Not a mechanical baby', 14612153, 3339, 156, 'Entertainment', 2011),
     (15, 'Yovie Widianto, Lyodra, Tiara Andini, Ziva Magnolya - Menyesal', 13894905, 452087, NULL, 'Music', 2023);
-</code>
+```
