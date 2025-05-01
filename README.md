@@ -26,3 +26,57 @@ A final exam assignment for Operating systems Course
     (14, 'Not a mechanical baby', 14612153, 3339, 156, 'Entertainment', 2011),
     (15, 'Yovie Widianto, Lyodra, Tiara Andini, Ziva Magnolya - Menyesal', 13894905, 452087, NULL, 'Music', 2023);
 ```
+## Code of app.py flask backend
+```
+from flask import Flask, jsonify, request
+import psycopg2
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+conn = psycopg2.connect(
+    host='your-rds-endpoint',
+    user='admin',
+    password='admin1234',
+    dbname='videodb'
+)
+
+@app.route('/videos', methods=['GET'])
+def get_videos():
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT * FROM tbl_firdavs_data ORDER BY rank ASC")
+        data = cursor.fetchall()
+    return jsonify(data)
+
+@app.route('/add', methods=['POST'])
+def add_video():
+    data = request.json
+    with conn.cursor() as cursor:
+        cursor.execute("""
+            INSERT INTO tbl_firdavs_data (rank, video, video_views, likes, dislikes, category, published)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (
+            data.get('rank'),
+            data.get('video'),
+            data.get('video_views'),
+            data.get('likes'),
+            data.get('dislikes'),
+            data.get('category'),
+            data.get('published')
+        ))
+        conn.commit()
+    return jsonify({'message': 'Video added successfully'})
+
+@app.route('/delete', methods=['POST'])
+def delete_video():
+    rank = request.json.get('rank')
+    with conn.cursor() as cursor:
+        cursor.execute("DELETE FROM tbl_firdavs_data WHERE rank = %s", (rank,))
+        conn.commit()
+    return jsonify({'message': f'Video with rank {rank} deleted'})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000)
+```
+
